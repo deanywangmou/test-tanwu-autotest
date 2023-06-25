@@ -1,0 +1,4 @@
+name5,code,result5_1,result5_2,result5_3
+兑换码_错误兑换码兑换失败,Txo7jf5omblxvk_False,"兑换码错误！",500,False
+兑换码_正确兑换码未过期兑换成功,Txo7jf5omblxvk,"操作成功",200,True
+兑换码_正确兑换码过期兑换失败,Tsoji32o4df68f,"兑换码已过期！",500,False

@@ -1,0 +1,129 @@
+config:
+  name: pre环境通用api主流程测试集
+
+testcases:
+  用例:全量油站信息展示:
+    testcase: testcases/P端接口/API对接主要接口/pre环境/全量油站信息展示.yml
+#
+#  用例:$name:
+#    testcase: testcases/P端接口/API对接主要接口/pre环境/油站分页信息展示.yml
+#    parameters:
+#      name-currentPage-pageSize:
+#        - [ 查询第1页油站数据,1,100 ]
+#        - [ 查询第2页油站数据,2,100 ]
+#        - [ 查询第3页油站数据,3,100 ]
+#        - [ 查询第4页油站数据,4,100 ]
+#        - [ 查询第5页油站数据,5,100 ]
+#
+#  用例:$name4:
+#    testcase: testcases/P端接口/API对接主要接口/pre环境/发放优惠券.yml
+#    parameters:
+#      name4-sourceId-result4_1-result4_2-result4_3: ${P(data/pre/sendCoupon.csv)}
+#
+#  用例:$name5:
+#    testcase: testcases/P端接口/API对接主要接口/pre环境/用户兑换优惠券.yml
+#    parameters:
+#      name5-code-result5_1-result5_2-result5_3: ${P(data/pre/exchangeCode_coupon.csv)}
+#
+#  用例:查询优惠券:
+#    testcase: testcases/P端接口/API对接主要接口/pre环境/查询优惠券.yml
+#
+#  用例:$name1:
+#    testcase: testcases/P端接口/API对接主要接口/pre环境/查看实时油价信息.yml
+#    parameters:
+#      name1-stationIds-oilId-result:
+#        - [ 检查staionId=100000266不参与任何活动油站92#用户单价, "100000266", 1, "7.15" ]
+#        - [ 检查staionId=100000266不参与任何活动油站95#用户单价, "100000266", 2, "7.40" ]
+#        - [ 检查staionId=100000266不参与任何活动油站0#用户单价, "100000266", 3, "7.90" ]
+#        - [ 检查staionId=100000266不参与任何活动油站98#用户单价, "100000266", 4, "8.10" ]
+#        - [ 检查staionIds油站集合98#用户单价, "100000266,100000263,100000267", 4, "8.10" ]
+#        - [ 检查staionId=100000267参与xy活动油站92#用户单价, "100000267", 1, "6.20" ]
+#        - [ 检查staionId=100000267参与xy活动油站95#用户单价, "100000267", 2, "6.60" ]
+#        - [ 检查staionId=100000267参与xy活动油站0#用户单价, "100000267", 3, "7.20" ]
+#        - [ 检查staionId=100000267参与xy活动油站98#用户单价, "100000267", 4, "7.50" ]
+#
+#  用例:$case:
+#    testcase: testcases/P端接口/API对接主要接口/pre环境/查看油站详情信息.yml
+#    parameters:
+#      case-stationId-expect1-expect2-expect3-expect4:
+#        - [ 检查staionId=100000263参与油站活动油站详情信息, "100000263", "7.05", "7.30", "7.80", "8.00" ]
+#        - [ 检查staionId=100000266不参与任何活动油站详情信息, "100000266", "7.15", "7.40", "7.90", "8.10" ]
+#        - [ 检查staionId=100000267参与xy活动油站详情信息, "100000267", "6.20", "6.60", "7.20", "7.50" ]
+#  #        - [ 检查staionId=100000261参与xy活动油站详情信息, "100000261", "6.20", "6.60", "7.20", "7.50" ]
+#
+#  用例:$name2:
+#    testcase: testcases/P端接口/API对接主要接口/pre环境/不使用优惠券计算参与油站和平台活动订单应付金额.yml
+#    parameters:
+#      name2-phoneNumber-oilgunCode-stationId-totalAmount-userCouponId-result2-payAmount-serviceFee: ${P(data/pre/checkTotalAmount_unUseCoupon.csv)}
+##        - [ 参与油站和平台活动，92#不使用优惠券检验应付金额,"18679256505", 1, 100000263, 200,"","4.17","195.83",0.00 ]
+##        - [ 参与油站和平台活动，95#不使用优惠券检验应付金额, "18679256505",2, 100000263, 200,"","5.34","194.67",0.01 ]
+##        - [ 参与油站和平台活动，0#不使用优惠券检验应付金额,"18679256505", 3, 100000263, 200,"","5.00","195.01",0.01 ]
+##        - [ 参与油站和平台活动，98#不使用优惠券检验应付金额, "18679256505",4, 100000263, 200,"","4.88","195.12",0.00 ]
+#
+#  用例:$name3:
+#    testcase: testcases/P端接口/API对接主要接口/pre环境/使用优惠券计算参与平台xy活动订单应付金额.yml
+#    variables:
+#      userCouponIdSql: SELECT id from ejy_ucs.member_coupon where  member_id = 103704047 AND state=1 AND status=1 ORDER BY id desc LIMIT 1;
+#      userCouponId: ${selectSqlOneData($userCouponIdSql,id)}
+#    parameters:
+#      name3-phoneNumber-oilgunCode-stationId-totalAmount-result3-payAmount-serviceFee: ${P(data/pre/checkTotalAmount_useCoupon.csv)}
+##        - [ 参与平台xy活动，92#使用优惠券检验应付金额, 18679256505,1, 100000267, 200,"16.39","94.84",0.11 ]
+##        - [ 参与平台xy活动，95#使用优惠券检验应付金额, 18679256505,2, 100000267, 200,"15.33","95.89",0.10 ]
+##        - [ 参与平台xy活动，0#使用优惠券检验应付金额, 18679256505,3, 100000267, 200,"14.00","97.22",0.10 ]
+##        - [ 参与平台xy活动，98#使用优惠券检验应付金额, 18679256505,4, 100000267, 200,"13.20","98.02",0.10 ]
+#
+#
+#  用例:用户支付金额与应付金额不一致，支付失败:
+#    testcase: testcases/P端接口/API对接主要接口/pre环境/用户支付金额与应付金额不一致，支付失败.yml
+#    variables:
+#      stationId: "100000266"   #老王P端测试专用~不可动勿动
+#
+#  用例:订单计算及下单、售后流程:
+#    testcase: testcases/P端接口/API对接主要接口/pre环境/订单支付及售后退款.yml
+#    variables:
+#      stationId: "100000266"   #老王P端测试专用~不可动勿动
+#
+#  用例:取消待支付订单:
+#    testcase: testcases/P端接口/API对接主要接口/pre环境/取消待支付订单.yml
+#    variables:
+#      stationId: "100000266"   #老王P端测试专用~不可动勿动
+#
+#  用例:待支付订单再次下单，需要取消优惠券和订单:
+#    testcase: testcases/P端接口/API对接主要接口/pre环境/待支付订单再次下单，需要取消优惠券和订单.yml
+#    variables:
+#      stationId: "100000266"   #老王P端测试专用~不可动勿动
+#
+#  用例:使用优惠券并参与油站活动下单成功:
+#    testcase: testcases/P端接口/API对接主要接口/pre环境/使用优惠券并参与油站活动下单成功.yml
+#    variables:
+#      stationId: "100000263"   #老王P端测试（油站标签）专用~切记勿动数据
+#
+#  用例:使用优惠券并参与xy活动下单成功:
+#    testcase: testcases/P端接口/API对接主要接口/pre环境/使用优惠券并参与xy活动下单成功.yml
+#    variables:
+#      stationId: "100000267"   #老王P端测试xy活动专用~切记勿动数据
+#
+#  用例:检查当天加油次数:
+#    testcase: testcases/P端接口/API对接主要接口/pre环境/检查当天加油次数.yml
+#    variables:
+#      stationId: "100000267"   #老王P端测试xy活动专用~切记勿动数据
+#
+#  用例:油站配置需要小票机，小票机不在线下单失败:
+#    testcase: testcases/P端接口/API对接主要接口/pre环境/油站配置需要小票机，小票机不在线下单失败.yml
+#    variables:
+#      stationId: "100000273"   #老王测试小票机离线~切记勿动数据
+#
+#  用例:$name6:
+#    testcase: testcases/P端接口/API对接主要接口/pre环境/财务对账单.yml
+#    parameters:
+#      name6-pageNum-pageSize-orderId-outOrderSign:
+#        - [ 查询第1页按照100页分页财务对账数据,1,100,'','' ]
+#        - [ 查询第2页按照100页分页财务对账数据,2,100,'','' ]
+#        - [ 不传分页条件查询财务对账数据,'','','','' ]
+#        - [ 通过第三方订单号查询财务对账数据,'','','','1111' ]
+#
+#  用例:查询财务对账单场景测试:
+#    testcase: testcases/P端接口/API对接主要接口/pre环境/查询财务对账单场景测试.yml
+#
+#  用例:获取油站标签数据:
+#    testcase: testcases/P端接口/API对接主要接口/pre环境/获取油站标签数据.yml

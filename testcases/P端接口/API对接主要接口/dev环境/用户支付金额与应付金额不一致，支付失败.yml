@@ -1,0 +1,84 @@
+- config:
+    name: 用户支付金额与应付金额不一致，支付失败
+    base_url: ${ENV(PPORTURL)}
+    variables:
+      totalAmount: 200
+      stationId: $stationId
+      userPhone: "18679256505"
+      sign: ${forEach(0)}
+      timestamp: ${forEach(1)}
+      platformName: Rbxac
+    output:
+      - orderSign
+
+- test:
+    name: 创建油站订单
+    api: api/P端接口/API对接主要接口/创建订单接口.yml
+    variables:
+      version: 6.5.6
+      platformName: $platformName
+      sign: $sign
+      timestamp: $timestamp
+      hadInvoice: true    #是否需要发票
+      identityCode:
+      invoiceHead:     #发票抬头
+      invoiceNumber:   #个人税号
+      oilgunCode: 1
+      outOrderSign:   #第三方订单号
+      phoneNumber: $userPhone
+      plateNumber:   #车牌号码
+      stationId: $stationId
+      totalAmount: $totalAmount
+      userCouponId:
+      clientType: "5"
+      productType: "79" #平台标识
+      socialType: "4"
+      sourceType: "2"   #渠道
+      Authorization:
+      cityName:
+      latitude:
+      longitude:
+      machineNo:
+      noAuth:
+      osType:
+      plat:
+      userPhone: $userPhone
+      versionBuild:
+    extract:
+      orderSign: json.data.orderSign
+    validate:
+      - eq: [ "status_code", 200 ]
+      - eq: [ json.message, "操作成功" ]
+      - eq: [ json.code, 200 ]
+      - eq: [ json.success, True ]
+
+- test:
+    name: 用户支付金额与应付金额不一致，支付失败
+    api: api/P端接口/API对接主要接口/订单支付接口.yml
+    variables:
+      version: 6.5.6
+      platformName: $platformName
+      sign: $sign
+      timestamp: $timestamp
+      outOrderSign: 1112
+      payAmount: 200
+      clientType: "5"
+      productType: "79" #平台标识
+      socialType: "4"
+      sourceType: "2"   #渠道
+      Authorization:
+      cityName:
+      latitude:
+      longitude:
+      machineNo:
+      noAuth:
+      osType:
+      plat:
+      userPhone: $userPhone
+      versionBuild:
+    validate:
+      - eq: [ "status_code", 200 ]
+      - eq: [ json.message, "订单金额不一致" ]
+      - eq: [ json.code, 500 ]
+      - eq: [ json.success, False ]
+      - contains: ["text", 'totalCount']

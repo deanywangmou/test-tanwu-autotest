@@ -1,0 +1,36 @@
+name: 财务对账单接口
+base_url: ${ENV(PPORTURL)}
+variables:
+  version: $version
+  platformName: $platformName
+  sign: $sign
+  timestamp: $timestamp
+  statementParas:
+    endTime: $endTime
+    pageNum: $pageNum
+    pageSize: $pageSize
+    startTime: $startTime
+    orderId: $orderId
+    outOrderSign: $outOrderSign
+
+request:
+  url: /gateway/ensd-service/openApi/order/statement/$version/$platformName/$sign/$timestamp
+  method: GET
+  headers:
+    clientType: $clientType
+    productType: $productType   #平台标识
+    socialType: $socialType
+    sourceType: $sourceType     #渠道:C：1, P:2, Y:3
+    Authorization:
+    cityName:
+    latitude:
+    longitude:
+    machineNo:
+    noAuth:
+    osType:
+    plat:
+    userPhone:
+    versionBuild:
+  params: $statementParas
+validate:
+  - eq: [ "status_code", 200 ]

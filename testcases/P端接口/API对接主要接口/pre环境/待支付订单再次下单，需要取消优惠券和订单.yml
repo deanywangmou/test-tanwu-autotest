@@ -1,0 +1,131 @@
+- config:
+    name: 待支付订单再次下单，需要取消优惠券和订单
+    base_url: ${ENV(PPORTURL)}
+    variables:
+      totalAmount: 200
+      stationId: $stationId
+      userPhone: "18679256505"
+      sign: ${forEach(0)}
+      timestamp: ${forEach(1)}
+      platformName: Y6050
+    output:
+      - orderSign
+
+- test:
+    name: 创建油站订单-待支付
+    api: api/P端接口/API对接主要接口/创建订单接口.yml
+    variables:
+      version: 6.5.6
+      platformName: $platformName
+      sign: $sign
+      timestamp: $timestamp
+      hadInvoice: true    #是否需要发票
+      identityCode:
+      invoiceHead:     #发票抬头
+      invoiceNumber:   #个人税号
+      oilgunCode: 1
+      outOrderSign:   #第三方订单号
+      phoneNumber: $userPhone
+      plateNumber:   #车牌号码
+      stationId: $stationId
+      totalAmount: $totalAmount
+      userCouponIdSql: SELECT id from ejy_ucs.member_coupon where  member_id = 103704047 AND state=1 AND status=1 ORDER BY id desc LIMIT 1;
+      userCouponId: ${selectSqlOneData($userCouponIdSql,id)}
+      clientType: "5"
+      productType: "79" #平台标识
+      socialType: "4"
+      sourceType: "2"   #渠道
+      Authorization:
+      cityName:
+      latitude:
+      longitude:
+      machineNo:
+      noAuth:
+      osType:
+      plat:
+      userPhone: $userPhone
+      versionBuild:
+    extract:
+      orderSign: json.data.orderSign
+    validate:
+      - eq: [ "status_code", 200 ]
+      - eq: [ json.message, "操作成功" ]
+      - eq: [ json.code, 200 ]
+      - eq: [ json.success, True ]
+
+- test:
+    name: 再次创建油站订单，原订单和优惠券需要释放
+    api: api/P端接口/API对接主要接口/创建订单接口.yml
+    variables:
+      version: 6.5.6
+      platformName: $platformName
+      sign: $sign
+      timestamp: $timestamp
+      hadInvoice: true    #是否需要发票
+      identityCode:
+      invoiceHead:     #发票抬头
+      invoiceNumber:   #个人税号
+      oilgunCode: 1
+      outOrderSign:   #第三方订单号
+      phoneNumber: $userPhone
+      plateNumber:   #车牌号码
+      stationId: $stationId
+      totalAmount: $totalAmount
+      userCouponIdSql: SELECT id from ejy_ucs.member_coupon where  member_id = 103704047 AND state=1 AND status=1 ORDER BY id desc LIMIT 1;
+      userCouponId: ${selectSqlOneData($userCouponIdSql,id)}
+      clientType: "5"
+      productType: "79" #平台标识
+      socialType: "4"
+      sourceType: "2"   #渠道
+      Authorization:
+      cityName:
+      latitude:
+      longitude:
+      machineNo:
+      noAuth:
+      osType:
+      plat:
+      userPhone: $userPhone
+      versionBuild:
+    validate:
+      - eq: [ "status_code", 200 ]
+      - eq: [ json.message, "操作成功" ]
+      - eq: [ json.code, 200 ]
+      - eq: [ json.success, True ]
+
+- test:
+    name: 查询再次下单的前一笔订单被取消
+    api: api/P端接口/API对接主要接口/历史订单查询接口.yml
+    variables:
+      version: 6.5.6
+      platformName: $platformName
+      userPhone: $userPhone
+      sign: $sign
+      timestamp: $timestamp
+      page: 1
+      stationIds: $stationId
+      orderSignStatusSql: SELECT order_status from ensd_ocs.user_order_0  WHERE order_id=$orderSign;
+      orderSignStatus: ${selectSqlOneData($orderSignStatusSql,order_status)}
+      clientType: "5"
+      productType: "79" #平台标识
+      socialType: "4"
+      sourceType: "2"   #渠道
+      Authorization:
+      cityName:
+      latitude:
+      longitude:
+      machineNo:
+      noAuth:
+      osType:
+      plat:
+      versionBuild:
+    validate:
+      - eq: [ "status_code", 200 ]
+      - eq: [ json.code, 200 ]
+      - eq: [ json.message, "操作成功" ]
+      - eq: [ json.success, True ]
+      - str_eq: [ json.data.orderList.0.stationPhone, "0722-12306" ]
+      - contains: [ json.data, "allPaySum" ]
+      - contains: [ json.data, "saveMoney" ]
+      - str_eq: [ json.data.orderList.1.orderId, $orderSign ]
+      - str_eq: [ $orderSignStatus, 2 ]

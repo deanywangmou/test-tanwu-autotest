@@ -1,0 +1,84 @@
+- config:
+    name: 油站配置需要小票机，小票机不在线下单失败
+    base_url: ${ENV(PPORTURL)}
+    variables:
+      totalAmount: 200
+      stationId: $stationId
+      userPhone: "18679256505"
+      sign: ${forEach(0)}
+      timestamp: ${forEach(1)}
+      platformName: Y6050
+
+- test:
+    name: 订单计算
+    api: api/P端接口/API对接主要接口/订单计算接口.yml
+    variables:
+      version: 6.5.6
+      platformName: $platformName
+      sign: $sign
+      timestamp: $timestamp
+      identityCode: 6  #唯一标识
+      oilgunCode: 1
+      phoneNumber: $userPhone
+      stationId: $stationId
+      totalAmount: $totalAmount
+      userCouponId:
+      clientType: "5"
+      productType: "79" #平台标识
+      socialType: "4"
+      sourceType: "2"   #渠道
+      Authorization:
+      cityName:
+      latitude:
+      longitude:
+      machineNo:
+      noAuth:
+      osType:
+      plat:
+      userPhone: $userPhone
+      versionBuild:
+    validate:
+      - eq: [ "status_code", 200 ]
+      - eq: [ json.message, "操作成功" ]
+      - eq: [ json.code, 200 ]
+      - eq: [ json.success, True ]
+      - str_eq: [ json.data.discountAmount, "1.39" ]
+      - str_eq: [ json.data.payAmount, "198.61" ]
+
+- test:
+    name: 创建油站订单
+    api: api/P端接口/API对接主要接口/创建订单接口.yml
+    variables:
+      version: 6.5.6
+      platformName: $platformName
+      sign: $sign
+      timestamp: $timestamp
+      hadInvoice: true    #是否需要发票
+      identityCode:
+      invoiceHead:     #发票抬头
+      invoiceNumber:   #个人税号
+      oilgunCode: 1
+      outOrderSign:   #第三方订单号
+      phoneNumber: $userPhone
+      plateNumber:   #车牌号码
+      stationId: $stationId
+      totalAmount: $totalAmount
+      userCouponId:
+      clientType: "5"
+      productType: "79" #平台标识
+      socialType: "4"
+      sourceType: "2"   #渠道
+      Authorization:
+      cityName:
+      latitude:
+      longitude:
+      machineNo:
+      noAuth:
+      osType:
+      plat:
+      userPhone: $userPhone
+      versionBuild:
+    validate:
+      - eq: [ "status_code", 200 ]
+      - eq: [ json.message, "小票机未开启，请让加油员给您开启下吧" ]
+      - eq: [ json.success, False ]
